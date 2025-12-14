@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { Brain, TrendingUp, Activity, BarChart3 } from 'lucide-react'
+import { Brain, Activity, BarChart3 } from 'lucide-react'
 
 export const Route = createFileRoute('/prototype')({
   component: RouteComponent,
