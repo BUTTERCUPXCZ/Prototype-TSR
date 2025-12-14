@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Brain, Activity, BarChart3 } from 'lucide-react'
 
-export const Route = createFileRoute('/prototype')({
+export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
 
@@ -104,7 +104,7 @@ function RouteComponent() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-              Enhanced Tree-Structured Regional CNN–LSTM
+              Enhanced Tree-Structured Regional CNN-LSTM
             </h1>
           </div>
           <p className="text-muted-foreground ">
@@ -158,7 +158,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="sentiment-input">Text Input</Label>
+             
               <Textarea
                 id="sentiment-input"
                 placeholder="Enter your text here... (e.g., 'This movie is absolutely wonderful!')"
