@@ -168,23 +168,7 @@ function RouteComponent() {
               />
             </div>
 
-            {/* Sample Texts */}
-            <div className="space-y-2">
-              <Label className="text-sm text-muted-foreground">Quick Samples:</Label>
-              <div className="flex flex-wrap gap-2">
-                {SAMPLE_TEXTS.map((text, idx) => (
-                  <Button
-                    key={idx}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => loadSampleText(text)}
-                    className="text-xs"
-                  >
-                    Sample {idx + 1}
-                  </Button>
-                ))}
-              </div>
-            </div>
+          
 
             <Button
               onClick={analyzeSentiment}
@@ -297,20 +281,6 @@ function ModelResults({ result, detailed = false }: { result: PredictionResult; 
         </div>
       </div>
 
-      <Separator />
-
-      {/* Metrics */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <Label className="text-xs text-muted-foreground">Pearson r</Label>
-          <p className="text-2xl font-bold text-primary">{result.pearsonR.toFixed(4)}</p>
-        </div>
-        <div className="space-y-1">
-          <Label className="text-xs text-muted-foreground">MAE</Label>
-          <p className="text-2xl font-bold text-destructive">{result.mae.toFixed(4)}</p>
-        </div>
-      </div>
-
       {detailed && (
         <div className="pt-2">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -324,7 +294,7 @@ function ModelResults({ result, detailed = false }: { result: PredictionResult; 
 }
 
 function getValenceLabel(valence: number) {
-  if (valence > 0.5) return { label: 'Positive', color: 'bg-green-500' }
+  if (valence > 0.5) return { label: 'Positive', color: 'bg-green-500' } 
   if (valence < -0.5) return { label: 'Negative', color: 'bg-red-500' }
   return { label: 'Neutral', color: 'bg-gray-500' }
 }
