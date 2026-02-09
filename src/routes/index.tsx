@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -14,13 +14,6 @@ export const Route = createFileRoute('/')({
 })
 
 // Dummy data for demonstration
-const SAMPLE_TEXTS = [
-  "This movie is absolutely wonderful! I loved every moment of it.",
-  "The service was terrible and the food was cold.",
-  "It's okay, nothing special but not bad either.",
-  "I'm extremely disappointed with this purchase.",
-  "Best experience ever! Highly recommend to everyone!"
-]
 
 interface PredictionResult {
   valence: number
@@ -45,7 +38,7 @@ function RouteComponent() {
     if (!inputText.trim()) return
 
     setIsAnalyzing(true)
-    
+
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1500))
 
@@ -92,10 +85,7 @@ function RouteComponent() {
     setIsAnalyzing(false)
   }
 
-  const loadSampleText = (text: string) => {
-    setInputText(text)
-    setResults(null)
-  }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
@@ -151,40 +141,47 @@ function RouteComponent() {
         {/* Input Section */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className='text-2xl font-bold'>Input Text for Analysis</CardTitle>
+            <CardTitle className='text-2xl font-bold'>Upload CSV File for Analysis</CardTitle>
             <CardDescription>
-              Enter a comment or sentence to analyze its sentiment dimensions
+              Upload a CSV file containing comments or sentences to analyze sentiment dimensions
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-             
-              <Textarea
-                id="sentiment-input"
-                placeholder="Enter your text here... (e.g., 'This movie is absolutely wonderful!')"
-                value={inputText}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInputText(e.target.value)}
-                className="min-h-[120px] resize-none"
+              <Input
+                id="csv-upload"
+                type="file"
+                accept=".csv"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    const reader = new FileReader()
+                    reader.onload = (event) => {
+                      const text = event.target?.result as string
+                      setInputText(text)
+                    }
+                    reader.readAsText(file)
+                  }
+                }}
+                className="cursor-pointer"
               />
             </div>
 
-          
-
             <Button
               onClick={analyzeSentiment}
-              disabled={!inputText.trim() || isAnalyzing}
+              disabled={!inputText || isAnalyzing}
               className="w-full"
               size="lg"
             >
               {isAnalyzing ? (
                 <>
                   <Activity className="mr-2 h-4 w-4 animate-spin" />
-                  Analyzing...
+                  Analyzing CSV...
                 </>
               ) : (
                 <>
                   <Brain className="mr-2 h-4 w-4" />
-                  Analyze Sentiment
+                  Analyze CSV
                 </>
               )}
             </Button>
@@ -233,7 +230,7 @@ function RouteComponent() {
                   </Card>
                 </div>
 
-               
+
               </div>
             </CardContent>
           </Card>
@@ -294,7 +291,7 @@ function ModelResults({ result, detailed = false }: { result: PredictionResult; 
 }
 
 function getValenceLabel(valence: number) {
-  if (valence > 0.5) return { label: 'Positive', color: 'bg-green-500' } 
+  if (valence > 0.5) return { label: 'Positive', color: 'bg-green-500' }
   if (valence < -0.5) return { label: 'Negative', color: 'bg-red-500' }
   return { label: 'Neutral', color: 'bg-gray-500' }
 }
