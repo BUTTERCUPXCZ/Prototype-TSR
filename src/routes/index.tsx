@@ -597,7 +597,7 @@ function RouteComponent() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-2 gap-4">
                         <DeltaBadge
                           label="Pearson-r"
                           baseline={results.baseline.pearsonR}
@@ -609,19 +609,6 @@ function RouteComponent() {
                           baseline={results.baseline.mae}
                           proposed={results.proposed.mae}
                           higherIsBetter={false}
-                        />
-                        <DeltaBadge
-                          label="Valence Accuracy"
-                          baseline={Math.abs(results.baseline.valence)}
-                          proposed={Math.abs(results.proposed.valence)}
-                          higherIsBetter={true}
-                        />
-                        <DeltaBadge
-                          label="Processing"
-                          baseline={results.baseline.processingTime}
-                          proposed={results.proposed.processingTime}
-                          higherIsBetter={false}
-                          unit="ms"
                         />
                       </div>
                     </CardContent>
@@ -741,6 +728,9 @@ function RouteComponent() {
                             Proposed
                           </th>
                           <th className="text-center p-3 font-medium">
+                            Emotion (Baseline)
+                          </th>
+                          <th className="text-center p-3 font-medium">
                             Emotion (Proposed)
                           </th>
                         </tr>
@@ -795,13 +785,21 @@ function RouteComponent() {
                               <td className="p-3 text-center">
                                 <Badge
                                   variant="secondary"
+                                  className={`${baselineEmotion.color} text-white text-xs`}
+                                >
+                                  {baselineEmotion.label}
+                                </Badge>
+                              </td>
+                              <td className="p-3 text-center">
+                                <Badge
+                                  variant="secondary"
                                   className={`${proposedEmotion.color} text-white text-xs`}
                                 >
                                   {proposedEmotion.label}
                                 </Badge>
                                 {emotionChanged && showDifferenceView && (
-                                  <div className="text-xs text-muted-foreground mt-1">
-                                    was: {baselineEmotion.label}
+                                  <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                    ✓ changed
                                   </div>
                                 )}
                               </td>
@@ -1077,31 +1075,24 @@ function getEmotionState(
   valence: number,
   arousal: number,
 ): { label: string; color: string } {
-  if (valence > 0.3 && arousal > 0.6) {
+  // Four main quadrants
+  if (valence > 0 && arousal >= 0.5) {
     return { label: "Excited/Happy", color: "bg-green-500" };
   }
-  if (valence > 0.3 && arousal < 0.4) {
+  if (valence > 0 && arousal < 0.5) {
     return { label: "Calm/Relaxed", color: "bg-teal-500" };
   }
-  if (valence < -0.3 && arousal > 0.6) {
+  if (valence < 0 && arousal >= 0.5) {
     return { label: "Tense/Angry", color: "bg-red-500" };
   }
-  if (valence < -0.3 && arousal < 0.4) {
+  if (valence < 0 && arousal < 0.5) {
     return { label: "Sad/Depressed", color: "bg-blue-500" };
   }
-  if (valence > 0.3) {
-    return { label: "Pleasant", color: "bg-green-400" };
-  }
-  if (valence < -0.3) {
-    return { label: "Unpleasant", color: "bg-red-400" };
-  }
-  if (arousal > 0.6) {
+  // Edge case: exactly 0 valence - classify by arousal
+  if (arousal >= 0.5) {
     return { label: "Activated", color: "bg-orange-500" };
   }
-  if (arousal < 0.4) {
-    return { label: "Deactivated", color: "bg-slate-500" };
-  }
-  return { label: "Neutral", color: "bg-gray-500" };
+  return { label: "Calm/Relaxed", color: "bg-teal-500" };
 }
 
 // 2D Quadrant Visualization Component (Circumplex Model)
